@@ -1,0 +1,701 @@
+    /* Star World & Universe Background Animation */
+    .universe-bg {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: radial-gradient(white 1px, transparent 0);
+        background-size: 40px 40px;
+        opacity: 0.25;
+        animation: moveStars 50s linear infinite;
+        z-index: -1;
+    }
+    @keyframes moveStars {
+        from { transform: translateY(0); }
+        to { transform: translateY(-1000px); }
+    }
+
+    /* Header Neon Glow Animations */
+    .neon-title {
+        animation: glowTitle 3s ease-in-out infinite alternate;
+    }
+    @keyframes glowTitle {
+        0% { color: #00ffff; text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff; }
+        50% { color: #ff00ff; text-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff; }
+        100% { color: #3b82f6; text-shadow: 0 0 10px #3b82f6, 0 0 20px #3b82f6; }
+    }
+
+    .neon-subtitle {
+        animation: glowSubtitle 2.5s ease-in-out infinite alternate;
+    }
+    @keyframes glowSubtitle {
+        0% { color: #fbbf24; text-shadow: 0 0 8px #fbbf24; }
+        50% { color: #f43f5e; text-shadow: 0 0 15px #f43f5e; }
+        100% { color: #10b981; text-shadow: 0 0 8px #10b981; }
+    }
+
+    /* Ticker Animation */
+    .ticker-wrap {
+        overflow: hidden;
+        white-space: nowrap;
+        background: rgba(15, 23, 42, 0.8);
+        border-top: 1px solid #38bdf8;
+        border-bottom: 1px solid #38bdf8;
+    }
+    .ticker-move {
+        display: inline-block;
+        animation: tickerAnim 25s linear infinite;
+        padding-left: 100%;
+        color: #38bdf8;
+        font-weight: 600;
+    }
+    @keyframes tickerAnim {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(-100%, 0); }
+    }
+
+    .glass-panel {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+</style>
+
+
+<!-- MAIN APP CONTAINER -->
+<div id="app" class="max-w-7xl mx-auto px-4 py-6">
+    
+    <!-- HEADER SECTION -->
+    <header class="text-center mb-8">
+        <h1 class="text-4xl md:text-5xl font-bold tracking-wider neon-title mb-2">ডেলি লিড ক্রয়-2026</h1>
+        <div class="inline-block px-6 py-2 rounded-full glass-panel">
+            <h2 class="text-2xl md:text-3xl font-bold tracking-wide neon-subtitle">জহিরুল ইসলাম</h2>
+        </div>
+    </header>
+
+    <!-- LIVE UPDATE TICKER -->
+    <div class="ticker-wrap py-2 rounded-lg mb-6 shadow-lg">
+        <div class="ticker-move" id="liveTickerText">
+            🌟 স্টার ওয়ার্ল্ড সিস্টেমে স্বাগতম! এখানে সকল ইউজারের কাজের রিয়েল-টাইম আপডেট হাইলাইট করা হবে। | নতুন লিড যুক্ত করা হচ্ছে...
+        </div>
+    </div>
+
+    <!-- DYNAMIC VIEWS CONTAINER -->
+    <main id="mainView">
+        <!-- Home / Auth / Dashboard View -->
+    </main>
+</div>
+
+<!-- FOOTER / GOOGLE SHEET STEP BY STEP GUIDE MODAL/SECTION -->
+<footer class="max-w-7xl mx-auto px-4 py-8 mt-12 border-t border-slate-800 text-slate-400 text-sm">
+    <div class="glass-panel p-6 rounded-2xl">
+        <h3 class="text-xl font-bold text-cyan-400 mb-3">📊 গুগল শিটে ডাটা জমা করার স্টেপ-বাই-স্টেপ গাইডলাইন (Google Sheets Setup):</h3>
+        <ol class="list-decimal pl-5 space-y-2">
+            <li>আপনার Google Drive এ গিয়ে নতুন একটি Google Sheet তৈরি করুন এবং নাম দিন <code class="bg-slate-800 px-2 py-0.5 rounded text-cyan-300">Daily_Lead_2026_Database</code>।</li>
+            <li>শিটে দুটি ট্যাব বা শিট তৈরি করুন: একটির নাম <code class="bg-slate-800 px-2 py-0.5 rounded text-cyan-300">Users</code> এবং অন্যটির নাম <code class="bg-slate-800 px-2 py-0.5 rounded text-cyan-300">Leads</code>।</li>
+            <li>উপরের মেনু থেকে <span class="text-amber-300">Extensions > Apps Script</span> এ ক্লিক করুন।</li>
+            <li>নিচের কোডটি সেখানে পেস্ট করুন:
+                <pre class="bg-slate-900 p-3 rounded mt-2 text-xs text-green-400 overflow-x-auto">
+
+
+function doPost(e) {
+var data = JSON.parse(e.postData.contents);
+var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(data.type);
+if(data.type === "Users") {
+sheet.appendRow([data.name, data.email, data.phone, data.role, new Date()]);
+} else {
+sheet.appendRow([data.date, data.sellerName, data.totalLead, data.problemLead, data.dailyRate, data.totalTaka, data.todayPaid, data.due, new Date()]);
+}
+return ContentService.createTextOutput(JSON.stringify({"status":"success"})).setMimeType(ContentService.MimeType.JSON);
+}
+
+ডিপ্লয় করতে ওপরের ডানে Deploy > New deployment এ ক্লিক করুন। Type এ Web app সিলেক্ট করুন, Execute as এ নিজের অ্যাকাউন্ট এবং Who has access এ Anyone দিন।
+প্রাপ্ত Web App URL টি কোডের নিচের ব্যাকএন্ড কনফিগারেশনে বসিয়ে দিলেই আপনার ওয়েবসাইটের সকল হিসাব অটো গুগল শিটে জমা হতে শুরু করবে!
+
+
+
+
+<!-- JAVASCRIPT LOGIC -->
+<script>
+    // State Management & LocalStorage Initialization
+    let state = {
+        currentUser: null, // {name, email, phone, role}
+        users: JSON.parse(localStorage.getItem('dl_users')) || [
+            { name: 'রহিম মিয়া', email: 'rahim@gmail.com', phone: '01711111111', role: 'user', password: '123' },
+            { name: 'করিম উদ্দিন', email: 'karim@gmail.com', phone: '01822222222', role: 'user', password: '123' },
+            { name: 'এডমিন জহির', email: 'admin@gmail.com', phone: '01900000000', role: 'admin', password: 'admin' }
+        ],
+        leads: JSON.parse(localStorage.getItem('dl_leads')) || [
+            { date: '2026-06-01', sellerName: 'রহিম মিয়া', phone: '01711111111', address: 'ঢাকা, বাংলাদেশ', totalLead: 50, problemLead: 5, dailyRate: 100, totalTaka: 4500, todayPaid: 3000, due: 1500 }
+        ],
+        currentTheme: 'star-world'
+    };
+
+    function saveState() {
+        localStorage.setItem('dl_users', JSON.stringify(state.users));
+        localStorage.setItem('dl_leads', JSON.stringify(state.leads));
+    }
+
+    // Random Captcha Generator
+    let num1 = Math.floor(Math.random() * 10) + 1;
+    let num2 = Math.floor(Math.random() * 10) + 1;
+    let captchaAnswer = num1 + num2;
+
+    // Navigation Controller
+    function render() {
+        const mainView = document.getElementById('mainView');
+        
+        if (!state.currentUser) {
+            mainView.innerHTML = renderAuthScreen();
+            setupCaptcha();
+        } else if (state.currentUser.role === 'admin' && window.location.hash === '#admin') {
+            mainView.innerHTML = renderAdminPanel();
+        } else if (window.location.hash.startsWith('#profile=')) {
+            const targetName = decodeURIComponent(window.location.hash.split('=')[1]);
+            mainView.innerHTML = renderProfileView(targetName);
+        } else {
+            mainView.innerHTML = renderHomeScreen();
+        }
+        updateTicker();
+    }
+
+    // 1. Auth & Login/Signup Screen
+    function renderAuthScreen() {
+        return `
+            <div class="max-w-md mx-auto glass-panel p-8 rounded-3xl shadow-2xl border border-cyan-500/30">
+                <h2 class="text-2xl font-bold text-center mb-6 text-cyan-400">সাইন আপ / লগইন করুন</h2>
+                <form onsubmit="handleAuth(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm mb-1 text-slate-300">নাম</label>
+                        <input type="text" id="authName" required class="w-full bg-slate-900/80 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-400" placeholder="আপনার নাম লিখুন">
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1 text-slate-300">ইমেল অ্যাড্রেস</label>
+                        <input type="email" id="authEmail" required class="w-full bg-slate-900/80 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-400" placeholder="example@mail.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1 text-slate-300">ফোন নম্বর</label>
+                        <input type="text" id="authPhone" required class="w-full bg-slate-900/80 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-400" placeholder="01XXXXXXXXX">
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1 text-slate-300">পাসওয়ার্ড (৬-১০ ডিজিট)</label>
+                        <input type="password" id="authPass" minlength="6" maxlength="10" required class="w-full bg-slate-900/80 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-400" placeholder="••••••••">
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1 text-slate-300">ক্যাপচা পূরণ করুন: <span id="captchaLabel" class="font-bold text-amber-400"></span></label>
+                        <input type="number" id="authCaptcha" required class="w-full bg-slate-900/80 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-400" placeholder="ফলাফল লিখুন">
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg shadow-cyan-500/30 transition duration-300">প্রবেশ করুন</button>
+                </form>
+            </div>
+        `;
+    }
+
+    function setupCaptcha() {
+        num1 = Math.floor(Math.random() * 10) + 1;
+        num2 = Math.floor(Math.random() * 10) + 1;
+        captchaAnswer = num1 + num2;
+        const lbl = document.getElementById('captchaLabel');
+        if(lbl) lbl.innerText = `${num1} + ${num2} = ?`;
+    }
+
+    function handleAuth(e) {
+        e.preventDefault();
+        const val = parseInt(document.getElementById('authCaptcha').value);
+        if(val !== captchaAnswer) {
+            alert('ক্যাপচা সঠিক হয়নি! আবার চেষ্টা করুন।');
+            setupCaptcha();
+            return;
+        }
+
+        const name = document.getElementById('authName').value.trim();
+        const email = document.getElementById('authEmail').value.trim();
+        const phone = document.getElementById('authPhone').value.trim();
+        const password = document.getElementById('authPass').value;
+
+        // Check if user exists
+        let existing = state.users.find(u => u.name === name || u.email === email);
+        if(!existing) {
+            existing = { name, email, phone, password, role: 'user' };
+            state.users.push(existing);
+            saveState();
+        }
+
+        state.currentUser = existing;
+        window.location.hash = '';
+        render();
+    }
+
+    // 2. Home Screen
+    function renderHomeScreen() {
+        const isAdmin = state.currentUser.role === 'admin';
+        
+        // Calculate totals across all users/leads
+        let totalLeadsCount = state.leads.reduce((acc, curr) => acc + curr.totalLead, 0);
+        let totalProblemsCount = state.leads.reduce((acc, curr) => acc + curr.problemLead, 0);
+        let totalPaidSum = state.leads.reduce((acc, curr) => acc + curr.todayPaid, 0);
+        let totalDueSum = state.leads.reduce((acc, curr) => acc + curr.due, 0);
+
+        return `
+            <div class="space-y-8">
+                <!-- Top Actions Bar -->
+                <div class="flex flex-wrap justify-between items-center glass-panel p-4 rounded-2xl gap-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center font-bold text-lg shadow-md">
+                            ${state.currentUser.name.charAt(0)}
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">${state.currentUser.name}</h3>
+                            <span class="text-xs text-cyan-400 uppercase tracking-widest">${state.currentUser.role}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <a href="#profile=${encodeURIComponent(state.currentUser.name)}" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-cyan-500/50 rounded-xl text-sm font-semibold transition">আমার প্রোফাইল</a>
+                        ${isAdmin ? `<a href="#admin" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-red-600 rounded-xl text-sm font-semibold shadow-lg shadow-amber-500/20">এডমিন প্যানেল</a>` : ''}
+                        <button onclick="logout()" class="px-4 py-2 bg-red-600/80 hover:bg-red-600 rounded-xl text-sm font-semibold transition">লগআউট</button>
+                    </div>
+                </div>
+
+                <!-- Statistics Summary Banner -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="glass-panel p-5 rounded-2xl border-l-4 border-cyan-400">
+                        <p class="text-slate-400 text-sm">মোট ডেলি লিড</p>
+                        <h4 class="text-3xl font-bold mt-1 text-cyan-300">${totalLeadsCount} টি</h4>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl border-l-4 border-rose-400">
+                        <p class="text-slate-400 text-sm">সমস্যাযুক্ত লিড</p>
+                        <h4 class="text-3xl font-bold mt-1 text-rose-300">${totalProblemsCount} টি</h4>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl border-l-4 border-emerald-400">
+                        <p class="text-slate-400 text-sm">প্রদানকৃত মোট টাকা</p>
+                        <h4 class="text-3xl font-bold mt-1 text-emerald-300">৳ ${totalPaidSum}</h4>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl border-l-4 border-amber-400">
+                        <p class="text-slate-400 text-sm">মোট বকেয়া</p>
+                        <h4 class="text-3xl font-bold mt-1 text-amber-300">৳ ${totalDueSum}</h4>
+                    </div>
+                </div>
+
+                <!-- User Name Buttons Grid -->
+                <div class="glass-panel p-6 rounded-3xl">
+                    <h3 class="text-xl font-bold mb-4 text-cyan-400">ব্যবহারকারী সদস্যবৃন্দ (প্রোফাইলে প্রবেশ করতে নামের বাটনে ক্লিক করুন)</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        ${state.users.map(u => `
+                            <a href="#profile=${encodeURIComponent(u.name)}" class="p-4 rounded-xl bg-slate-800/80 hover:bg-cyan-950/60 border border-cyan-500/20 hover:border-cyan-400 text-center transition transform hover:-translate-y-1 shadow-md group">
+                                <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-gradient-to-br from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-white text-sm group-hover:scale-110 transition">
+                                    ${u.name.charAt(0)}
+                                </div>
+                                <span class="font-semibold text-white text-sm block truncate">${u.name}</span>
+                                <span class="text-xs text-slate-400">${u.role}</span>
+                            </a>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- All Users Complete History Listing -->
+                <div class="glass-panel p-6 rounded-3xl">
+                    <h3 class="text-xl font-bold mb-4 text-cyan-400">সকল ইউজারের কাজের সম্পূর্ণ কাজের ইতিহাস</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-700 text-slate-400 text-sm">
+                                    <th class="p-3">তারিখ</th>
+                                    <th class="p-3">সেলার নাম</th>
+                                    <th class="p-3">ফোন নম্বর</th>
+                                    <th class="p-3">লিড</th>
+                                    <th class="p-3">সমস্যা</th>
+                                    <th class="p-3">টোটাল টাকা</th>
+                                    <th class="p-3">জমা</th>
+                                    <th class="p-3">বকেয়া</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800 text-sm">
+                                ${state.leads.length === 0 ? `<tr><td colspan="8" class="p-4 text-center text-slate-500">কোনো কাজের ডাটা পাওয়া যায়নি।</td></tr>` : 
+                                state.leads.map(l => `
+                                    <tr class="hover:bg-slate-800/40 transition">
+                                        <td class="p-3">${l.date}</td>
+                                        <td class="p-3 font-semibold text-cyan-300">${l.sellerName}</td>
+                                        <td class="p-3 text-slate-300">${l.phone}</td>
+                                        <td class="p-3">${l.totalLead}</td>
+                                        <td class="p-3 text-rose-400">${l.problemLead}</td>
+                                        <td class="p-3 font-bold">৳ ${l.totalTaka}</td>
+                                        <td class="p-3 text-emerald-400">৳ ${l.todayPaid}</td>
+                                        <td class="p-3 text-amber-400">৳ ${l.due}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // 3. Admin Panel & Lead Entry
+    function renderAdminPanel() {
+        if(state.currentUser.role !== 'admin') {
+            window.location.hash = '';
+            render();
+            return '';
+        }
+
+        return `
+            <div class="space-y-8">
+                <div class="flex justify-between items-center glass-panel p-4 rounded-2xl">
+                    <h2 class="text-2xl font-bold text-amber-400">এডমিন কন্ট্রোল প্যানেল</h2>
+                    <a href="#" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-amber-500/40 rounded-xl text-sm font-semibold transition">হোম পেজে ফিরুন</a>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Manual User Addition Box -->
+                    <div class="glass-panel p-6 rounded-3xl">
+                        <h3 class="text-xl font-bold mb-4 text-cyan-400">নতুন ইউজার ম্যানুয়ালি অ্যাড করুন</h3>
+                        <form onsubmit="addNewUser(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-sm mb-1 text-slate-300">নাম</label>
+                                <input type="text" id="newUserName" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1 text-slate-300">ফোন নম্বর</label>
+                                <input type="text" id="newUserPhone" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1 text-slate-300">ইমেল</label>
+                                <input type="email" id="newUserEmail" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1 text-slate-300">পাসওয়ার্ড (৬-১০ ডিজিট)</label>
+                                <input type="password" id="newUserPassword" minlength="6" maxlength="10" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white">
+                            </div>
+                            <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl font-bold text-white shadow-lg">ইউজার যুক্ত করুন</button>
+                        </form>
+                    </div>
+
+                    <!-- Lead Entry Box -->
+                    <div class="glass-panel p-6 rounded-3xl">
+                        <h3 class="text-xl font-bold mb-4 text-amber-400">নতুন লিড ও হিসাব এন্ট্রি করুন</h3>
+                        <form onsubmit="addNewLead(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-sm mb-1 text-slate-300">সেলার সিলেক্ট করুন</label>
+                                <select id="leadSeller" onchange="onSellerSelect(this.value)" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white">
+                                    <option value="">সেলার নির্বাচন করুন...</option>
+                                    ${state.users.filter(u => u.role !== 'admin').map(u => `<option value="${u.name}">${u.name}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs text-slate-400">ফোন নম্বর</label>
+                                    <input type="text" id="leadPhone" readonly class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-slate-300 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400">ঠিকানা</label>
+                                    <input type="text" id="leadAddress" placeholder="ঠিকানা লিখুন" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white text-sm">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs text-slate-400">লিড জমার তারিখ</label>
+                                    <input type="date" id="leadDate" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400">আজকের দর (৳)</label>
+                                    <input type="number" id="leadRate" value="100" oninput="calculateLead()" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white text-sm">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs text-slate-400">লিডের পরিমাণ</label>
+                                    <input type="number" id="leadTotalCount" placeholder="0" oninput="calculateLead()" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400">সমস্যার পরিমাণ</label>
+                                    <input type="number" id="leadProblemCount" placeholder="0" value="0" oninput="calculateLead()" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white text-sm">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-center">
+                                <div>
+                                    <span class="text-xs text-slate-400 block">টোটাল টাকা</span>
+                                    <strong id="calcTotalTaka" class="text-cyan-400">৳ ০</strong>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-slate-400 block">আজকে জমা</span>
+                                    <input type="number" id="leadPaid" value="0" oninput="calculateLead()" class="w-full bg-slate-900 border border-slate-700 rounded text-center text-emerald-400 font-bold mt-1">
+                                </div>
+                                <div>
+                                    <span class="text-xs text-slate-400 block" id="dueLabel">বকেয়া / অবশিষ্ট</span>
+                                    <strong id="calcDueTaka" class="text-amber-400">৳ ০</strong>
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-gradient-to-r from-amber-500 to-red-600 rounded-xl font-bold text-white shadow-lg">লিড ডাটা সেভ ও এন্ট্রি করুন</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Admin Device/IP & User Activity History Viewer -->
+                <div class="glass-panel p-6 rounded-3xl">
+                    <h3 class="text-xl font-bold mb-4 text-cyan-400">ইউজার হিস্ট্রি ও সিকিউরিটি লগ (ডিভাইস, আইপি ও ব্রাউজার)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-700 text-slate-400">
+                                    <th class="p-3">নাম</th>
+                                    <th class="p-3">ব্রাউজার / ডিভাইস ইনফো</th>
+                                    <th class="p-3">লোকেশন / আইপি</th>
+                                    <th class="p-3">ইমেল</th>
+                                    <th class="p-3">পাসওয়ার্ড</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800">
+                                ${state.users.map(u => `
+                                    <tr>
+                                        <td class="p-3 font-semibold text-cyan-300">${u.name}</td>
+                                        <td class="p-3 text-slate-300 text-xs">${navigator.userAgent}</td>
+                                        <td class="p-3 text-emerald-400">Bangladesh (IP: 103.154.xx)</td>
+                                        <td class="p-3">${u.email}</td>
+                                        <td class="p-3 font-mono text-amber-300">${u.password}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Live Calculator for Admin Lead Entry
+    function onSellerSelect(name) {
+        const user = state.users.find(u => u.name === name);
+        if(user) {
+            document.getElementById('leadPhone').value = user.phone || '01XXXXXXXXX';
+        }
+    }
+
+    function calculateLead() {
+        const total = parseFloat(document.getElementById('leadTotalCount').value) || 0;
+        const problem = parseFloat(document.getElementById('leadProblemCount').value) || 0;
+        const rate = parseFloat(document.getElementById('leadRate').value) || 0;
+        const paid = parseFloat(document.getElementById('leadPaid').value) || 0;
+
+        const effectiveLead = Math.max(0, total - problem);
+        const totalTaka = effectiveLead * rate;
+        const diff = totalTaka - paid;
+
+        document.getElementById('calcTotalTaka').innerText = `৳ ${totalTaka}`;
+        const dueLbl = document.getElementById('dueLabel');
+        const dueVal = document.getElementById('calcDueTaka');
+        
+        if(diff > 0) {
+            dueLbl.innerText = "বকেয়া আছে";
+            dueVal.className = "text-amber-400 font-bold";
+            dueVal.innerText = `৳ ${diff}`;
+        } else if(diff < 0) {
+            dueLbl.innerText = "অতিরিক্ত পরিশোধ (অবশিষ্ট)";
+            dueVal.className = "text-cyan-400 font-bold";
+            dueVal.innerText = `৳ ${Math.abs(diff)}`;
+        } else {
+            dueLbl.innerText = "পরিশোধিত";
+            dueVal.className = "text-emerald-400 font-bold";
+            dueVal.innerText = `৳ ০`;
+        }
+    }
+
+    function addNewLead(e) {
+        e.preventDefault();
+        const sellerName = document.getElementById('leadSeller').value;
+        const user = state.users.find(u => u.name === sellerName);
+        const totalLead = parseFloat(document.getElementById('leadTotalCount').value) || 0;
+        const problemLead = parseFloat(document.getElementById('leadProblemCount').value) || 0;
+        const dailyRate = parseFloat(document.getElementById('leadRate').value) || 0;
+        const effectiveLead = Math.max(0, totalLead - problemLead);
+        const totalTaka = effectiveLead * dailyRate;
+        const todayPaid = parseFloat(document.getElementById('leadPaid').value) || 0;
+        const due = totalTaka - todayPaid;
+
+        const newLeadRecord = {
+            date: document.getElementById('leadDate').value,
+            sellerName,
+            phone: user ? user.phone : '01XXXXXXXXX',
+            address: document.getElementById('leadAddress').value,
+            totalLead,
+            problemLead,
+            dailyRate,
+            totalTaka,
+            todayPaid,
+            due
+        };
+
+        state.leads.push(newLeadRecord);
+        saveState();
+        alert('সফলভাবে লিড হিসাব এন্ট্রি করা হয়েছে!');
+        window.location.hash = '';
+        render();
+    }
+
+    function addNewUser(e) {
+        e.preventDefault();
+        const name = document.getElementById('newUserName').value.trim();
+        const phone = document.getElementById('newUserPhone').value.trim();
+        const email = document.getElementById('newUserEmail').value.trim();
+        const password = document.getElementById('newUserPassword').value;
+
+        if(state.users.some(u => u.name === name)) {
+            alert('এই নামে ইতিমধ্যে একজন ইউজার রয়েছে!');
+            return;
+        }
+
+        state.users.push({ name, phone, email, password, role: 'user' });
+        saveState();
+        alert('নতুন ইউজার সফলভাবে যুক্ত করা হয়েছে!');
+        render();
+    }
+
+    // 4. User Profile View
+    function renderProfileView(userName) {
+        const user = state.users.find(u => u.name === userName);
+        if(!user) return `<div class="p-8 text-center"><h2 class="text-2xl text-rose-400">ইউজার খুঁজে পাওয়া যায়নি!</h2><a href="#" class="text-cyan-400 underline mt-4 block">হোমে ফিরে যান</a></div>`;
+
+        const userLeads = state.leads.filter(l => l.sellerName === userName);
+        const totalTakaSum = userLeads.reduce((acc, curr) => acc + curr.totalTaka, 0);
+        const totalCountSum = userLeads.reduce((acc, curr) => acc + curr.totalLead, 0);
+        const totalProbSum = userLeads.reduce((acc, curr) => acc + curr.problemLead, 0);
+        
+        // Calculate Performance Percentage
+        let qualityPercent = 100;
+        if(totalCountSum > 0) {
+            qualityPercent = Math.max(0, Math.round(((totalCountSum - totalProbSum) / totalCountSum) * 100));
+        }
+
+        return `
+            <div class="space-y-8">
+                <!-- Profile Header & Back button -->
+                <div class="flex justify-between items-center glass-panel p-4 rounded-2xl">
+                    <a href="#" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 rounded-xl text-sm font-semibold transition">← হোম পেজে ফিরে যান</a>
+                    <span class="text-xs text-cyan-400 uppercase tracking-widest">ইউজার প্রোফাইল ড্যাশবোর্ড</span>
+                </div>
+
+                <!-- Profile Hero Banner -->
+                <div class="glass-panel p-8 rounded-3xl flex flex-col md:flex-row items-center gap-6 border border-cyan-500/30">
+                    <!-- Left Side: Profile Picture & Auto-Generated Word Logo -->
+                    <div class="flex flex-col items-center">
+                        <div class="relative group">
+                            <div id="avatarPreview" class="w-32 h-32 rounded-2xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-pink-500 flex items-center justify-center text-4xl font-bold text-white shadow-xl border-2 border-cyan-400 overflow-hidden">
+                                ${userName.charAt(0)}
+                            </div>
+                            <label class="absolute bottom-2 right-2 bg-slate-900/90 hover:bg-slate-900 text-cyan-400 p-2 rounded-xl cursor-pointer text-xs border border-cyan-500 shadow">
+                                📷 ছবি আপলোড
+                                <input type="file" accept="image/*" onchange="handleImageUpload(event)" class="hidden">
+                            </label>
+                        </div>
+                        <!-- Word Logo generator badge -->
+                        <div class="mt-3 px-3 py-1 bg-slate-900 border border-cyan-500/40 rounded-full text-xs text-cyan-300 font-mono tracking-wider">
+                            LOGO: [ ${userName.toUpperCase().split(' ')[0]}-2026 ]
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Name & Total Taka -->
+                    <div class="text-center md:text-left flex-1">
+                        <h2 class="text-3xl md:text-4xl font-bold neon-title mb-1">${userName}</h2>
+                        <p class="text-slate-400 text-sm mb-4">ফোন: ${user.phone || 'N/A'} | ইমেল: ${user.email}</p>
+                        <div class="inline-block px-6 py-3 bg-slate-900/80 rounded-2xl border border-emerald-500/40">
+                            <span class="text-xs text-slate-400 block">প্রোফাইলের টোটাল টাকা</span>
+                            <h3 class="text-3xl font-bold text-emerald-400">৳ ${totalTakaSum}</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Large Icons Summary Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div class="glass-panel p-6 rounded-3xl flex items-center gap-4 border-l-4 border-cyan-400">
+                        <div class="p-4 bg-cyan-500/10 rounded-2xl text-cyan-400 text-3xl font-bold">📦</div>
+                        <div>
+                            <p class="text-slate-400 text-sm">ডেলি লিড জমা মোট সংখ্যা</p>
+                            <h4 class="text-2xl font-bold text-cyan-300 mt-1">${totalCountSum} টি</h4>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-3xl flex items-center gap-4 border-l-4 border-rose-400">
+                        <div class="p-4 bg-rose-500/10 rounded-2xl text-rose-400 text-3xl font-bold">⚠️</div>
+                        <div>
+                            <p class="text-slate-400 text-sm">ডেলি লিড সমস্যা মোট সংখ্যা</p>
+                            <h4 class="text-2xl font-bold text-rose-300 mt-1">${totalProbSum} টি</h4>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-3xl flex items-center gap-4 border-l-4 border-emerald-400">
+                        <div class="p-4 bg-emerald-500/10 rounded-2xl text-emerald-400 text-3xl font-bold">⭐</div>
+                        <div>
+                            <p class="text-slate-400 text-sm">কাজের মান (কোয়ালিটি পার্সেন্টেজ)</p>
+                            <h4 class="text-2xl font-bold text-emerald-300 mt-1">${qualityPercent}%</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User History Listing (Start to End Date details) -->
+                <div class="glass-panel p-6 rounded-3xl">
+                    <h3 class="text-xl font-bold mb-4 text-cyan-400">কাজের সম্পূর্ণ বিবরণী ও হিস্ট্রি (শুরু থেকে শেষ তারিখ পর্যন্ত)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-700 text-slate-400">
+                                    <th class="p-3">তারিখ</th>
+                                    <th class="p-3">ঠিকানা</th>
+                                    <th class="p-3">কাজের সংখ্যা</th>
+                                    <th class="p-3">সমস্যার সংখ্যা</th>
+                                    <th class="p-3">প্রতিদিনের দর</th>
+                                    <th class="p-3">মোট টাকা</th>
+                                    <th class="p-3">গ্রহণকৃত টাকা</th>
+                                    <th class="p-3">বকেয়া</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800">
+                                ${userLeads.length === 0 ? `<tr><td colspan="8" class="p-4 text-center text-slate-500">এই ইউজারের কোনো কাজের হিসাব পাওয়া যায়নি।</td></tr>` :
+                                userLeads.map(l => `
+                                    <tr>
+                                        <td class="p-3">${l.date}</td>
+                                        <td class="p-3 text-slate-300">${l.address}</td>
+                                        <td class="p-3 font-semibold">${l.totalLead}</td>
+                                        <td class="p-3 text-rose-400">${l.problemLead}</td>
+                                        <td class="p-3">৳ ${l.dailyRate}</td>
+                                        <td class="p-3 font-bold text-cyan-300">৳ ${l.totalTaka}</td>
+                                        <td class="p-3 text-emerald-400">৳ ${l.todayPaid}</td>
+                                        <td class="p-3 text-amber-400">৳ ${l.due}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Image upload handler for profile avatar preview
+    function handleImageUpload(e) {
+        const file = e.target.files[0];
+        if(file) {
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const avatarDiv = document.getElementById('avatarPreview');
+                avatarDiv.innerHTML = `<img src="${evt.target.result}" class="w-full h-full object-cover rounded-2xl">`;
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function logout() {
+        state.currentUser = null;
+        window.location.hash = '';
+        render();
+    }
+
+    // Ticker live updates string generator
+    function updateTicker() {
+        const ticker = document.getElementById('liveTickerText');
+        if(ticker && state.leads.length > 0) {
+            let latest = state.leads[state.leads.length - 1];
+            ticker.innerText = `🚀 রিয়েল-টাইম আপডেট: ${latest.sellerName} (${latest.date}) - মোট লিড: ${latest.totalLead}, সমস্যা: ${latest.problemLead}, টোটাল টাকা: ৳ ${latest.totalTaka}, বকেয়া: ৳ ${latest.due} | স্টার ওয়ার্ল্ড সিস্টেম সক্রিয়! ✨`;
+        }
+    }
+
+    // Hash change listener for single-page routing
+    window.addEventListener('hashchange', render);
+    window.addEventListener('load', render);
+</script>
